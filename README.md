@@ -1,10 +1,10 @@
 # Manual de configuração SAMBA
 
-Este vai ser um guia rápido de como instalar o [SAMBA](https://www.samba.org/) para utilizar como um acesso direto a uma pasta ou drive em seu servidor Raspberry Pi. Caso tenha uma instância do Nextcloud rodando em sua maquina esse método é compativel para realizar acessos via sua rede local.
+Este vai ser um guia rápido de como instalar o [SAMBA](https://www.samba.org/) para utilizar como um acesso direto a uma pasta ou drive em seu servidor Raspberry Pi. Caso tenha uma instância do Nextcloud rodando em sua máquina esse método é compatível para realizar acessos via sua rede local.
 
 ## Setup
 
-Para esse guia, será utilizado um Raspberry Pi 5 4 GB como máquina principal. Caso queira, é possível utilizar qualquer máquina que seja x86 ou ARM64 (aarch64), tendo em mente que essa máquina deve contar com um suporte no mínimo OK.
+Para esse guia, será utilizado um Raspberry Pi 5 4 GB como máquina principal. Caso queira, é possível utilizar qualquer máquina que seja x86 ou ARM64 (aarch64), tendo em mente que essa máquina deve contar com um suporte no mínimo ok.
 
 ### Instalação do OS (Sistema Operacional)
 
@@ -56,3 +56,95 @@ mv server-key-file-name server-key-file-name.pub ~/.ssh/
 ```
 
 ---
+
+## Instalação do SAMBA
+
+Com a máquina já operando pode ser realizada a instalação da ferramenta SAMBA através dos seguintes passos.
+
+- **Ubuntu/Debian**
+
+  ``` bash
+    sudo apt install samba
+  ```
+
+- **Fedora/RHel**
+
+  ``` bash
+    sudo dnf install samba samba-common samba-client 
+  ```
+
+- **openSUSE**
+
+  ```bash
+      sudo zypper install samba samba-client
+  ```
+
+## Configurando o SAMBA
+
+Para esta seção será realizada a configuração da aplicação, junto a passos anteriores para realizar estas configurações.
+
+1. O primeiro passo é criar uma pasta para ser utilizada no armazenamento de arquivos:
+  
+```bash
+    mkdir /mnt/backup/sambashare
+```
+
+A pasta pode ser criada em qualquer lugar que deseje como exemplo podemos criar na pasta `/etc/nome_de_sua_pasta` ou no meu caso como tenho discos externos montados para armazenamento `/mnt/local_de_montagem`.
+
+2. Vamos editar as configurações do SAMBA e adicionar nossa pasta lá:
+
+```bash
+    sudo nano /etc/samba/smb.conf
+```
+
+No fim do arquivo vamos adicionar as nossas configurações:
+
+```bash
+[nome_de_sua_escolha]
+   comment = Comentario sobre a sua pasta
+   path = /local_escolhido/nome_da_pasta
+   read only = no
+   browsable = yes
+   writeable=yes
+   create mask=0777
+   directory mask=0777
+```
+
+*Dica: CTR-O para salvar e CTR-X para sair da edição de arquivo.*
+
+3. Reinicie o serviço do samba para ele reconhecer as novas configurações:
+
+```bash
+    sudo systemctl restart smbd
+```
+
+*Opcional*
+4. Atualize as configurações de seu firewall para permitir o samba com:
+
+```bash
+    sudo ufw allow samba
+```
+
+5. Criar um novo usuário samba para fazer login e acessar sua pasta de forma segura:
+
+```bash
+    sudo smbpasswd -a nome-de-usuario
+```
+
+- **Nota: que o `nome-de-usuario` deve ser igual ao nome de usuário do sistema, caso contrário ele não será salvo**
+
+## Conectar a pasta através do SMB
+
+Utilize o seguinte endereço em seu explorador de arquivos ou ferramenta de conexão para acessar a sua pasta:
+
+```bash
+smb://ip-de-sua-maquina/nome_de_sua_escolha
+```
+
+Exemplo:
+
+```bash
+smb://192.168.0.122/NAS
+```
+
+Lembre se de usar o usuário e senha que você criou na etapa final do processo anterior.
