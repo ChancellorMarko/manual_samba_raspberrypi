@@ -33,4 +33,4 @@ Para essa configuração você poderá usar um gerador de chaves SSH como o ssh-
     - `-t ed25519` ou `-t ecdsa -b 521`: são os métodos utilizados para realizar uma encriptação e gerar uma chave única.
 
 2. Insira a chave no local indicado pela interface clicando em procurar 'Browse'.
-   ![exemplo](https://github.com/ChancellorMarko/manual_hospedagem/blob/main/img/4_screen.png)
+   ![exemplo](https://github.com/ChancellorMarko/manual_samba_raspberrypi/blob/main/img/4_screen.png)
