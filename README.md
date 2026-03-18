@@ -147,4 +147,4 @@ Exemplo:
 smb://192.168.0.122/NAS
 ```
 
-Lembre se de usar o usuário e senha que você criou na etapa final do processo anterior.
+**Lembre se de usar o usuário e senha que você criou na etapa final do processo anterior.**
